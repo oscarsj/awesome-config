@@ -1,3 +1,4 @@
+-- vim: ff=unix ts=2 ss=2 tw=80 fdm=marker shiftwidth=2
 -- {{{ License
 --
 -- Awesome configuration, using awesome 3.4.10 on Ubuntu 11.10
@@ -7,7 +8,6 @@
 -- Alike License: http://creativecommons.org/licenses/by-sa/3.0/
 -- based off Adrian C. <anrxc@sysphere.org>'s rc.lua
 -- }}}
-
 
 -- {{{ Libraries
 require("awful")
@@ -28,11 +28,11 @@ editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
 wallpaper_app = "feh" -- if you want to check for app before trying
-wallpaper_dir = os.getenv("HOME") .. "/Pictures/Wallpaper" -- wallpaper dir
+wallpaper_dir = os.getenv("HOME") .. "/Dropbox/wallpapers" -- wallpaper dir
 
 -- taglist numerals
 --- arabic, chinese, {east|persian}_arabic, roman, thai, random
-taglist_numbers = "chinese" -- we support arabic (1,2,3...),
+taglist_numbers = "arabic" -- we support arabic (1,2,3...),
 
 cpugraph_enable = true -- Show CPU graph
 cputext_format = " $1%" -- %1 average cpu, %[2..] every other thread individually
@@ -42,16 +42,16 @@ memtext_format = " $1%" -- %1 percentage, %2 used %3 total %4 free
 
 date_format = "%a %m/%d/%Y %l:%M%p" -- refer to http://en.wikipedia.org/wiki/Date_(Unix) specifiers
 
-networks = {'eth0'} -- add your devices network interface here netwidget, only shows first one thats up.
+networks = {'eth0', 'wlan0'} -- add your devices network interface here netwidget, only shows first one thats up.
 
 require_safe('personal')
 
 -- Create personal.lua in this same directory to override these defaults
 
-
 -- }}}
 
 -- {{{ Variable definitions
+-- local wallpaper_cmd = "find " .. wallpaper_dir .. " -type f -name '*.jpg'  -print0 | shuf -n1 -z | xargs -0 feh --bg-scale"
 local wallpaper_cmd = "find " .. wallpaper_dir .. " -type f -name '*.jpg'  -print0 | shuf -n1 -z | xargs -0 feh --bg-scale"
 local home   = os.getenv("HOME")
 local exec   = awful.util.spawn
@@ -343,7 +343,7 @@ for s = 1, screen.count() do
     -- Create the wibox
     wibox[s] = awful.wibox({      screen = s,
         fg = beautiful.fg_normal, height = 16,
-        bg = beautiful.bg_normal, position = "top",
+        bg = beautiful.bg_normal, position = "bottom",
         border_color = beautiful.border_normal,
         border_width = beautiful.border_width
     })
