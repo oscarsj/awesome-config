@@ -8,4 +8,6 @@ run_once("nm-applet") -- networking
 
 run_once("wmname", "LG3D") -- java fix
 
+run_once("xfsettingsd", "") -- settings daemon
+
 run_once("sh " .. os.getenv("HOME") .. "/.screenlayout/dual-monitor.sh") -- set screens up
