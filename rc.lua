@@ -228,7 +228,7 @@ vicious.register(fs.s, vicious.widgets.fs, "${/media/files used_p}", 599)
 -- {{{ Network usage
 function print_net(name, down, up)
 	return '<span color="'
-	.. beautiful.fg_netdn_widget ..'">' .. down .. '</span> <span color="'
+	.. beautiful.fg_netdn_widget ..'">' .. down .. '</span>  <span color="'
 	.. beautiful.fg_netup_widget ..'">' .. up  .. '</span>'
 end
 
@@ -249,8 +249,17 @@ vicious.register(netwidget, vicious.widgets.net,
 			end
 		end
 	end, 3)
--- }}}
 
+ipwidget = widget({ type = "textbox" })
+-- Register widget
+vicious.register(ipwidget, vicious.widgets.net,
+	function (widget, args)
+        ip = 'ip addr show p17p1 | cut -d " " -f 6 | sed -n "3p" | cut -d "/" -f 1'
+        local f = io.popen(ip) 
+        ip = f:read("*a"):match "^%s*(.-)%s*$"
+        return ' <span>' .. ip .. '</span> '
+    end, 3)
+-- }}}
 
 
 -- {{{ Volume level
@@ -296,7 +305,7 @@ if whereis_app('curl') and whereis_app('mpd') then
 		function (widget, args)
 			if args["{state}"] == "Stop" or args["{state}"] == "Pause" or args["{state}"] == "N/A"
 				or (args["{Artist}"] == "N/A" and args["{Title}"] == "N/A") then return ""
-			else return '<span color="white">музыка:</span> '..
+			else return '<span color="white">Playing:</span> '..
 			     args["{Artist}"]..' - '.. args["{Title}"]
 			end
 		end
@@ -324,7 +333,6 @@ taglist.buttons = awful.util.table.join(
     awful.button({ },        4, awful.tag.viewnext),
     awful.button({ },        5, awful.tag.viewprev
 ))
-
 
 for s = 1, screen.count() do
     -- Create a promptbox
@@ -359,7 +367,7 @@ for s = 1, screen.count() do
         datewidget, dateicon,
         baticon.image and separator, batwidget, baticon or nil,
         separator, volwidget,  volbar.widget, volicon,
-        dnicon.image and separator, upicon, netwidget, dnicon or nil,
+        dnicon.image and separator, upicon, netwidget, dnicon, ipwidget or nil,
         separator, fs.r.widget, fs.s.widget, fsicon,
         separator, memtext, membar_enable and membar.widget or nil, memicon,
         separator, tzfound and tzswidget or nil,
