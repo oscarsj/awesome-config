@@ -471,6 +471,18 @@ clientkeys = awful.util.table.join(
         awful.key({ modkey,  "Shift"         }, "l",
         function ()
             os.execute("xscreensaver-command -lock")
+        end),
+        awful.key({ modkey,           }, "F8",
+        function (c)
+            os.execute("ncmpcpp next")
+        end),
+        awful.key({ modkey,           }, "F6",
+        function (c)
+            os.execute("ncmpcpp prev")
+        end),
+        awful.key({ modkey,           }, "F7",
+        function (c)
+            os.execute("ncmpcpp toggle")
         end)
 )
 
