@@ -483,6 +483,14 @@ clientkeys = awful.util.table.join(
         awful.key({ modkey,           }, "F7",
         function (c)
             os.execute("ncmpcpp toggle")
+        end),
+        awful.key({ modkey,           }, "F11",
+        function (c)
+            os.execute("ncmpcpp volume -5")
+        end),
+        awful.key({ modkey,           }, "F12",
+        function (c)
+            os.execute("ncmpcpp volume +5")
         end)
 )
 
