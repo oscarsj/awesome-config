@@ -32,7 +32,7 @@ wallpaper_dir = os.getenv("HOME") .. "/Dropbox/wallpapers" -- wallpaper dir
 
 -- taglist numerals
 --- arabic, chinese, {east|persian}_arabic, roman, thai, random
-taglist_numbers = "arabic" -- we support arabic (1,2,3...),
+taglist_numbers = "chinese" -- we support arabic (1,2,3...),
 
 cpugraph_enable = true -- Show CPU graph
 cputext_format = " $1%" -- %1 average cpu, %[2..] every other thread individually
@@ -351,7 +351,7 @@ for s = 1, screen.count() do
     -- Create the wibox
     wibox[s] = awful.wibox({      screen = s,
         fg = beautiful.fg_normal, height = 16,
-        bg = beautiful.bg_normal, position = "bottom",
+        bg = beautiful.bg_normal, position = "top",
         border_color = beautiful.border_normal,
         border_width = beautiful.border_width
     })

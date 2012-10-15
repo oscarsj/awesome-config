@@ -1,9 +1,9 @@
-terminal = 'terminator' -- can be app in path, or full path e.g. /usr/bin/xterm
+terminal = 'gnome-terminal' -- can be app in path, or full path e.g. /usr/bin/xterm
 editor = 'vim'
 
 wallpaper_dir = os.getenv("HOME") .. "/Pictures/" -- grabs a random bg
 
-taglist_numbers = "arabic" -- we support arabic (1,2,3...),
+taglist_numbers = "chinese" -- we support arabic (1,2,3...),
 -- arabic, chinese, {east|persian}_arabic, roman, thai, random
 --
 cpugraph_enable = true -- show CPU graph
