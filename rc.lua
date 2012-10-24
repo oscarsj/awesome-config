@@ -28,7 +28,7 @@ editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
 wallpaper_app = "feh" -- if you want to check for app before trying
-wallpaper_dir = os.getenv("HOME") .. "/Dropbox/wallpapers" -- wallpaper dir
+wallpaper_dir = os.getenv("HOME") .. "/wallpapers" -- wallpaper dir
 
 -- taglist numerals
 --- arabic, chinese, {east|persian}_arabic, roman, thai, random
@@ -334,6 +334,39 @@ taglist.buttons = awful.util.table.join(
     awful.button({ },        5, awful.tag.viewprev
 ))
 
+mytasklist = {}
+mytasklist.buttons = awful.util.table.join(
+                     awful.button({ }, 1, function (c)
+                                              if c == client.focus then
+                                                  c.minimized = true
+                                              else
+                                                  if not c:isvisible() then
+                                                      awful.tag.viewonly(c:tags()[1])
+                                                  end
+                                                  -- This will also un-minimize
+                                                  -- the client, if needed
+                                                  client.focus = c
+                                                  c:raise()
+                                              end
+                                          end),
+                     awful.button({ }, 3, function ()
+                                              if instance then
+                                                  instance:hide()
+                                                  instance = nil
+                                              else
+                                                  instance = awful.menu.clients({ width=250 })
+                                              end
+                                          end),
+                     awful.button({ }, 4, function ()
+                                              awful.client.focus.byidx(1)
+                                              if client.focus then client.focus:raise() end
+                                          end),
+                     awful.button({ }, 5, function ()
+                                              awful.client.focus.byidx(-1)
+                                              if client.focus then client.focus:raise() end
+                                          end))
+
+
 for s = 1, screen.count() do
     -- Create a promptbox
     promptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
@@ -348,6 +381,10 @@ for s = 1, screen.count() do
 
     -- Create the taglist
     taglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, taglist.buttons)
+    -- Create a tasklist widget
+    mytasklist[s] = awful.widget.tasklist(function(c)
+                                              return awful.widget.tasklist.label.currenttags(c, s)
+                                          end, mytasklist.buttons)
     -- Create the wibox
     wibox[s] = awful.wibox({      screen = s,
         fg = beautiful.fg_normal, height = 16,
@@ -372,6 +409,7 @@ for s = 1, screen.count() do
         separator, memtext, membar_enable and membar.widget or nil, memicon,
         separator, tzfound and tzswidget or nil,
         cpugraph_enable and cpugraph.widget or nil, cpuwidget, cpuicon,
+        mytasklist[s],
         ["layout"] = awful.widget.layout.horizontal.rightleft
     }
 end
@@ -461,6 +499,10 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ altkey, ""			  }, "F4",     function (c) c:kill()                         end),
+    awful.key({ modkey, "Shift" }, "t", function (c)
+       if   c.titlebar then awful.titlebar.remove(c)
+       else awful.titlebar.add(c, { modkey = modkey }) end
+    end),
     awful.key({ modkey,           }, "t",  awful.client.floating.toggle                     ),
     awful.key({ modkey,           }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
@@ -568,7 +610,7 @@ client.add_signal("manage", function (c, startup)
         if   c.titlebar then awful.titlebar.remove(c)
         else awful.titlebar.add(c, {modkey = modkey}) end
     end
-
+    
     -- Enable sloppy focus
     c:add_signal("mouse::enter", function (c)
         if  awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
