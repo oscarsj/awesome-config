@@ -106,7 +106,7 @@ end
 -- {{{ Wibox
 --
 -- {{{ Widgets configuration
---
+
 -- {{{ Reusable separator
 separator = widget({ type = "imagebox" })
 separator.image = image(beautiful.widget_sep)
@@ -254,13 +254,12 @@ ipwidget = widget({ type = "textbox" })
 -- Register widget
 vicious.register(ipwidget, vicious.widgets.net,
 	function (widget, args)
-        ip = 'ip addr show p17p1 | cut -d " " -f 6 | sed -n "3p" | cut -d "/" -f 1'
+        ip = 'ip addr show wlan2 | cut -d " " -f 6 | sed -n "3p" | cut -d "/" -f 1'
         local f = io.popen(ip) 
         ip = f:read("*a"):match "^%s*(.-)%s*$"
         return ' <span>' .. ip .. '</span> '
     end, 3)
 -- }}}
-
 
 -- {{{ Volume level
 volicon = widget({ type = "imagebox" })
@@ -277,13 +276,13 @@ volbar:set_gradient_colors({ beautiful.fg_widget,
 }) -- Enable caching
 vicious.cache(vicious.widgets.volume)
 -- Register widgets
-vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "PCM")
-vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "PCM")
+vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "Master -D pulse")
+vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "Master -D pulse")
 -- Register buttons
 volbar.widget:buttons(awful.util.table.join(
    awful.button({ }, 1, function () exec("kmix") end),
-   awful.button({ }, 4, function () exec("amixer -q set PCM 2dB+", false) vicious.force({volbar, volwidget}) end),
-   awful.button({ }, 5, function () exec("amixer -q set PCM 2dB-", false) vicious.force({volbar, volwidget}) end)
+   awful.button({ }, 4, function () exec("amixer -q -D pulse set Master 5%+", false) vicious.force({volbar, volwidget}) end),
+   awful.button({ }, 5, function () exec("amixer -q -D pulse set Master 5%-", false) vicious.force({volbar, volwidget}) end)
 )) -- Register assigned buttons
 volwidget:buttons(volbar.widget:buttons())
 -- }}}
@@ -313,7 +312,6 @@ if whereis_app('curl') and whereis_app('mpd') then
 end
 
 -- }}}
-
 
 -- {{{ System tray
 systray = widget({ type = "systray" })
@@ -403,7 +401,7 @@ for s = 1, screen.count() do
         s == 1 and separator or nil, -- only show on first screen
         datewidget, dateicon,
         baticon.image and separator, batwidget, baticon or nil,
-        separator, volwidget,  volbar.widget, volicon,
+        separator, volwidget,  volbar.widget, volicon, 
         dnicon.image and separator, upicon, netwidget, dnicon, ipwidget or nil,
         separator, fs.r.widget, fs.s.widget, fsicon,
         separator, memtext, membar_enable and membar.widget or nil, memicon,
