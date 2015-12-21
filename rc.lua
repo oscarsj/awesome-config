@@ -17,6 +17,7 @@ require("naughty")
 -- User libraries
 require("vicious") -- ./vicious
 require("helpers") -- helpers.lua
+require("revelation")
 -- }}}
 
 -- {{{ Default configuration
@@ -42,7 +43,7 @@ memtext_format = " $1%" -- %1 percentage, %2 used %3 total %4 free
 
 date_format = "%a %m/%d/%Y %l:%M%p" -- refer to http://en.wikipedia.org/wiki/Date_(Unix) specifiers
 
-networks = {'eth0', 'wlan0'} -- add your devices network interface here netwidget, only shows first one thats up.
+networks = {'eth3', 'wlan2', 'tun0'} -- add your devices network interface here netwidget, only shows first one thats up.
 
 require_safe('personal')
 
@@ -65,10 +66,10 @@ layouts = {
   awful.layout.suit.tile,
   awful.layout.suit.tile.bottom,
   awful.layout.suit.tile.top,
-  --awful.layout.suit.fair,
+  awful.layout.suit.fair,
   awful.layout.suit.max,
   awful.layout.suit.magnifier,
-  --awful.layout.suit.floating
+  awful.layout.suit.floating
 }
 -- }}}
 
@@ -280,7 +281,8 @@ vicious.register(volbar,    vicious.widgets.volume,  "$1",  2, "Master -D pulse"
 vicious.register(volwidget, vicious.widgets.volume, " $1%", 2, "Master -D pulse")
 -- Register buttons
 volbar.widget:buttons(awful.util.table.join(
-   awful.button({ }, 1, function () exec("kmix") end),
+   awful.button({ }, 3, function () exec("kmix") end),
+   awful.button({ }, 1, function () exec("amixer -q -D pulse set Master toggle") vicious.force({volbar, volwidget}) end),
    awful.button({ }, 4, function () exec("amixer -q -D pulse set Master 5%+", false) vicious.force({volbar, volwidget}) end),
    awful.button({ }, 5, function () exec("amixer -q -D pulse set Master 5%-", false) vicious.force({volbar, volwidget}) end)
 )) -- Register assigned buttons
@@ -435,7 +437,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
-
+    awful.key({ modkey}, "e", revelation), 
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
